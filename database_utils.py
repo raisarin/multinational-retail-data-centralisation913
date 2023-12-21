@@ -14,7 +14,7 @@ class DatabaseConnector:
         creds_data = yaml.safe_load(file) # Dealing with untrusted input file
         print("INFO: Credentials Read")
       return creds_data
-    except FileNotFoundError: 
+    except FileNotFoundError as e: 
       print("ERROR: File not found\n", e)
     except Exception as e: 
       print("ERROR: Unexpected error\n", e)
@@ -42,5 +42,5 @@ class DatabaseConnector:
       return table_name
     except Exception as e: 
       print("Error: Engine inspection failed\n", e)
-
+  
 # %%
