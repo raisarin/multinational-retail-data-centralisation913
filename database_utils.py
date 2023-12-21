@@ -1,6 +1,6 @@
 # %%
 import yaml
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 
 class DatabaseConnector:
   creds_yaml = 'db_creds.yaml'
@@ -32,6 +32,13 @@ class DatabaseConnector:
       print("Database engine initilised in DatabaseConnector")
       return engine
     except Exception as e: 
-      print("ERROR: Database engine initilisation failed")
-
+      print("ERROR: Database engine initilisation failed", e)
+    
+  @classmethod
+  def list_db_table(cls): 
+    engine = cls.init_db_engine()
+    inspector = inspect(engine)
+    table_name = inspector.get_table_names()
+    print("Table in database: ", table_name)
+    return table_name
 # %%
