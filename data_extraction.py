@@ -1,6 +1,5 @@
 # %%
-#import database_utils as dbu
-from sqlalchemy import text
+from sqlalchemy import text # fetch_data query
 import pandas as pd
 
 class DataExtractor:
@@ -20,9 +19,9 @@ class DataExtractor:
   def read_rds_table(self, table_name): 
     try: 
       with self.db_connector.engine.execution_options(isolation_level='AUTOCOMMIT').connect() as connection: 
-        rds_pd = pd.read_sql_table(table_name, self.db_connector.engine)
-        print(rds_pd.head(10))
-        return rds_pd
+        table_df = pd.read_sql_table(table_name, self.db_connector.engine)
+        print(F"INFO: Dataframe read from table {table_name}")
+        return table_df
     except Exception as e: 
       print("Error: Reading RDS table failed\n", e)
 # %%

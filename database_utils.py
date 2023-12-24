@@ -43,4 +43,23 @@ class DatabaseConnector:
     except Exception as e: 
       print("Error: Engine inspection failed\n", e)
   
+  def upload_to_db(self, table_df, table_name):
+    DATABASE_TYPE = 'postgresql'
+    DBAPI = 'psycopg2'
+    HOST = 'localhost'
+    USER = 'postgres'
+    PASSWORD = 'sql123'
+    DATABASE = 'sales_data'
+    PORT = 5432
+    try: 
+      engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
+      print("INFO: Database engine initilised to upload table to database")
+    except Exception as e: 
+      print("ERROR: Database engine initilisation failed when uploading table to database\n", e)
+    try: 
+      with engine.execution_options(isolation_level='AUTOCOMMIT').connect(): 
+        table_df.to_sql('dim_users', con=engine, if_exists='replace')
+      print(f"INFO: {table_name} has been uploaded to database")
+    except Exception as e: 
+      print("ERROR: Database engine initilisation failed when uploading table to database\n", e)
 # %%
