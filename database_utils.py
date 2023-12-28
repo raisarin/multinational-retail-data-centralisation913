@@ -3,11 +3,11 @@ import yaml
 from sqlalchemy import create_engine, inspect
 
 class DatabaseConnector:
-  def __init__(self, creds_file = 'db_creds.yaml'):
+  def __init__(self, creds_file):
     self.creds_file = creds_file
     self.creds_data = self.read_db_creds()
     self.engine = self.init_db_engine()
-    self.table_list = self.lsit_db_tables()
+    self.table_name = self.list_db_tables()
 
   def read_db_creds(self):
     try: 
@@ -42,13 +42,13 @@ class DatabaseConnector:
       print("Table in database: ", table_name)
       return table_name
     except Exception as e: 
-      print("Error: Engine inspection failed\n", e)
+      print("Error: Table inspection failed\n", e)
   
   def upload_to_db(self, table_df, table_name):
     try: 
-      with engine.execution_options(isolation_level='AUTOCOMMIT').connect(): 
-        table_df.to_sql({table_name}, con=engine, if_exists='replace')
+      done = table_df.to_sql(table_name, con=self.engine, if_exists='replace')  
       print(f"INFO: {table_name} has been uploaded to database")
+      return done
     except Exception as e: 
-      print("ERROR: Database engine initilisation failed when uploading table to database\n", e)
+      print("ERROR: Failed uploading table to database\n", e)
 # %%
