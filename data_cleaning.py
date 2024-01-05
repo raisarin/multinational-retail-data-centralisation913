@@ -4,7 +4,7 @@ from dateutil.parser import parse
 class DataCleaning: 
   
   def clean_country_code(self, df):
-    df['country_code'] = df['country_code'].str.replace('GGB', 'GB')
+    df.loc[:,'country_code'] = df['country_code'].str.replace('GGB', 'GB')
     df = df[df['country_code'].str.len() == 2]
     return df
   
@@ -18,7 +18,7 @@ class DataCleaning:
   
   def clean_phone_number(self, df):
     df['phone_number'] = df['phone_number'].replace({r'\+49':'0', r'\+44':'0', r'\(0\)':''}, regex=True)
-    df['phone_number'] = df['phone_number'].replace({'D': ''}, regex=True)
+    df['phone_number'] = df['phone_number'].replace({r'\D': ''}, regex=True)
     return df
     
   def clean_user_data(self, df):

@@ -4,7 +4,7 @@ import pandas as pd
 import tabula
 
 class DataExtractor:
-  def __init__(self, db_connector):
+  def __init__(self, db_connector=None):
     self.db_connector = db_connector
   
   # def fetch_data(self, table_name): 
