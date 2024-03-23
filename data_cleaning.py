@@ -30,6 +30,9 @@ class DataCleaning:
     df = self.clean_phone_number(df)
     return df
   
+  move all the function in the different def functions 
+  
+  def clean_card_number(self, df): 
 
   def clean_card_data(self, df):
     #15587 = 55 + 56*277 + 20 <- (19 data + 1 heading)
