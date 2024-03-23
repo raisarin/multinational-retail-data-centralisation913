@@ -31,8 +31,8 @@ if __name__ == "__main__":
 
   stores_details_endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/'
   stores_data = DataExtractor().retrieve_stores_data(stores_details_endpoint, headers, number_of_stores)
-  stores_date_clean = DataCleaning().clean_store_data(stores_data)
-  local_db_connector.upload_to_db(stores_date_clean, 'dim_store_details')
+  stores_data_clean = DataCleaning().clean_store_data(stores_data)
+  local_db_connector.upload_to_db(stores_data_clean, 'dim_store_details')
 
   # %%
   # Task 6: Extract and clean product details 

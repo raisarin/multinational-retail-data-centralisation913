@@ -32,7 +32,7 @@ class DataCleaning:
     """
     df.loc[:,column_name] = df[column_name].apply(parse)
     df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
-    df.dropna(axis=0, inplace=True)
+    df.dropna(axis=0, subset=[column_name] ,inplace=True)
     df[column_name] = df[column_name].dt.strftime('%Y-%m-%d')
     return df
   
@@ -166,8 +166,10 @@ class DataCleaning:
     """
     df = df[df['country_code'].str.len() == 2]
     df.loc[:,'continent'] = df['continent'].replace({'eeEurope':'Europe', 'eeAmerica':'America'})
-    df = df.drop('lat', axis=1)
-    df = self.clean_date(df, 'opening_date')
+    df = df.drop(['lat', 'address'], axis=1)
+    df = self._clean_date(df, 'opening_date')
+    df['staff_numbers'] = df['staff_numbers'].str.extract('(\\d+)')
+    df.set_index('longitude', inplace=True)
     df = df.drop_duplicates()
     return df
 
@@ -266,7 +268,7 @@ class DataCleaning:
     Returns: 
       pd.dataframe: Clean orders dataframe.
     """
-    df = df.drop(['level_0','first_name','last_name','1', 'index'], axis=1)
+    df = df.drop(['level_0','first_name','last_name','1'], axis=1)
     df.set_index('date_uuid', inplace=True)
     return df
 
