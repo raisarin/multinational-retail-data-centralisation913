@@ -34,5 +34,5 @@ class DataExtractor:
       return pdf_df
     except Exception as e: 
       print("ERROR: Unable to retrieve PDF data\n", e)
-     
+  
 # %%

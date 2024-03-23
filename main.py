@@ -16,3 +16,6 @@ local_db_connector.upload_to_db(user_data_clean, 'dim_users')
 # %%
 # Extact, clean and upload card data
 card_data = DataExtractor().retrieve_pdf_data()
+card_data_clean= DataCleaning().clean_card_data(card_data)
+local_db_connector.upload_to_db(card_data_clean, 'dim_card_details')
+# %%

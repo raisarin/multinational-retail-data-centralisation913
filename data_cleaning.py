@@ -2,13 +2,14 @@ import pandas as pd
 from dateutil.parser import parse
 
 class DataCleaning: 
-  
+
+  ## for clean user data 
   def clean_country_code(self, df):
     df.loc[:,'country_code'] = df['country_code'].str.replace('GGB', 'GB')
     df = df[df['country_code'].str.len() == 2]
     return df
   
-  #phone number 
+  # phone number 
   def clean_date(self, df, coloumn_name):
     df.loc[:,coloumn_name] = df[coloumn_name].apply(parse)
     df[coloumn_name] = pd.to_datetime(df[coloumn_name], errors='coerce')
@@ -30,12 +31,9 @@ class DataCleaning:
     df = self.clean_phone_number(df)
     return df
   
-  move all the function in the different def functions 
-  
+  ## For cleaning card data
   def clean_card_number(self, df): 
-
-  def clean_card_data(self, df):
-    #15587 = 55 + 56*277 + 20 <- (19 data + 1 heading)
+    # 15587 = 55 + 56*277 + 20 <- (19 data + 1 heading)
     ## card_number errors
 
     # Card Number range between 16 - 19 digits
@@ -46,21 +44,35 @@ class DataCleaning:
     df['card_number'] = pd.to_numeric(df['card_number'], errors='coerce', downcast='unsigned')
     df.dropna(axis=0, inplace=True)
     try: 
-      df['card_number'] = df['card_number'].astype('uint64')
+      # the type has been set to object as SQL does not support the use of uint64
+      df['card_number'] = df['card_number'].astype('object')
     except Exception as e: 
       print("ERROR: Failed to clean card number coloumn as unsigned integer\n", e)
-    
-    #expiry_date   
+    return df 
+  
+  def clean_expiry_date(self, df): 
     df['expiry_date'] = pd.to_datetime(df['expiry_date'], format='%m/%d', errors='coerce', exact=True)
     df.dropna(axis=0, inplace=True)
-    df['expiry_date'] = df['expiry_date'].dt.strftime('%m/%d')
-
-    #card_provider 
+    df['expiry_date'] = df['expiry_date'].dt.strftime('%m/%d') 
+    return df
+  
+  def clean_card_provider(self, df):
+    card_provider_list = ['Diners Club / Carte Blanche', 'American Express', 
+                          'JCB 16 digit', 'JCB 15 digit', 
+                          'Maestro', 'Mastercard', 
+                          'Discover', 'VISA 19 digit', 
+                          'VISA 16 digit', 'VISA 13 digit']
+    df = df[df['card_provider'].isin(card_provider_list)]
     df['card_provider'] = df['card_provider'].astype('string')
-
-    #date_payment_confirmed
+    return df
+  
+  def clean_date_payment(self,df):
     df['date_payment_confirmed'] = pd.to_datetime(df['date_payment_confirmed'], format='%Y-%m-%d', errors='coerce', exact=True)
     df.dropna(axis=0, inplace=True)
     return df
 
-
+  def clean_card_data(self, df):
+    df = self.clean_card_number(df)
+    df = self.clean_expiry_date(df)
+    df = self.clean_card_provider(df)
+    df = self.clean_date_payment(df)
