@@ -5,7 +5,7 @@ class DataCleaning:
 
   ## for clean user data 
   def clean_country_code(self, df):
-    df.loc[:,'country_code'] = df['country_code'].str.replace('GGB', 'GB')
+    df.loc[:,'country_code'] = df['country_code'].replace('GGB','GB')
     df = df[df['country_code'].str.len() == 2]
     return df
   
@@ -23,7 +23,7 @@ class DataCleaning:
     return df
     
   def clean_user_data(self, df):
-    df.drop_duplicates()
+    df = df.drop_duplicates()
     df = df[~df.isin(['NULL']).any(axis=1)]
     df = self.clean_country_code(df)
     df = self.clean_date(df, 'date_of_birth')
@@ -76,3 +76,12 @@ class DataCleaning:
     df = self.clean_expiry_date(df)
     df = self.clean_card_provider(df)
     df = self.clean_date_payment(df)
+    return df
+
+  def clean_store_data(self, df): 
+    df = df[df['country_code'].str.len() == 2]
+    df.loc[:,'continent'] = df['continent'].replace({'eeEurope':'Europe', 'eeAmerica':'America'})
+    df = df.drop('lat', axis=1)
+    df = self.clean_date(df, 'opening_date')
+    df = df.drop_duplicates()
+    return df

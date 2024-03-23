@@ -17,23 +17,40 @@ class DataExtractor:
       print("Error: Reading RDS table failed\n", e)
   
   # use "lattice=true" for more accurate table extraction and to avoid combining datas to single cell
-  def retrieve_pdf_data(self, link = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf'):
+  def retrieve_pdf_data(self, pdf_link):
     try: 
-      pdf_list = tabula.read_pdf(link, stream=True, multiple_tables=False, pages='all', lattice=True)
+      pdf_list = tabula.read_pdf(pdf_link, stream=True, multiple_tables=False, pages='all', lattice=True)
       pdf_df = pdf_list[0]
       print("Info: PDF converted to Datafram from link")
       return pdf_df
     except Exception as e: 
       print("ERROR: Unable to retrieve PDF data\n", e)
   
-  def list_number_of_stores(self, endpoint, header):
-    response = requests.get(endpoint, headers=header)
+  def list_number_of_stores(self, endpoint, headers):
+    
+    response = requests.get(endpoint, headers=headers)
     if response.status_code == 200: 
       data = response.json()
       return data['number_stores']
     else: 
+      print('ERROR: Request failed for List number of stores')
       print(f"ERROR: Request failed with status code: {response.status_code}")
       print(f"ERROR: Response Text: {response.text}")      
-  
-  def retrieve_stores_data(self, endpoint):
+
+  def retrieve_stores_data(self, endpoint, headers, number_of_stores):
+    store_data_list = []
+    #session = requests.Session()
+    for store_number in range(number_of_stores): 
+      #response = session.get(f'{endpoint}{store_number}', headers=headers)
+      response = requests.get(f'{endpoint}{store_number}', headers=headers)
+      if response.status_code == 200: 
+        data = response.json()
+        data = pd.json_normalize(data)
+        store_data_list.append(data)
+      else: 
+        print('ERROR: Request failed for retrive stores data')
+        print(f"ERROR: Request failed with status code: {response.status_code}")
+        print(f"ERROR: Response Text: {response.text}")   
+    store_data = pd.concat(store_data_list).set_index('index')
+    return store_data   
 # %%
