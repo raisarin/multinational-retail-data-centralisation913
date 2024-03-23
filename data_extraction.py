@@ -64,8 +64,9 @@ class DataExtractor:
     """
     try: 
       pdf_list = tabula.read_pdf(pdf_link, stream=True, multiple_tables=False, pages='all', lattice=True)
-      pdf_df = pdf_list[0]
-      print("Info: PDF converted to Datafram from link")
+     #pdf_df = pdf_list[0]
+      pdf_df = pd.concat(pdf_list)
+      print("Info: PDF converted to Dataframe from link")
       return pdf_df
     except Exception as e: 
       print("ERROR: Unable to retrieve PDF data\n", e)
@@ -87,9 +88,10 @@ class DataExtractor:
     response = requests.get(endpoint, headers=headers)
     if response.status_code == 200: 
       data = response.json()
+      print("INFO: Number of stores extracted")
       return data['number_stores']
     else: 
-      print('ERROR: Request failed for List number of stores')
+      print("ERROR: Request failed for List number of stores")
       print(f"ERROR: Request failed with status code: {response.status_code}")
       print(f"ERROR: Response Text: {response.text}")      
 

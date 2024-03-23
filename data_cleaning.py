@@ -266,7 +266,7 @@ class DataCleaning:
     Returns: 
       pd.dataframe: Clean orders dataframe.
     """
-    df = df.drop(['level_0','first_name','last_name','1'], axis=1)
+    df = df.drop(['level_0','first_name','last_name','1', 'index'], axis=1)
     df.set_index('date_uuid', inplace=True)
     return df
 

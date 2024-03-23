@@ -16,7 +16,7 @@ class DatabaseConnector:
     table_name (list): List of table names in the database. 
 
   """
-  
+
   def __init__(self, creds_file):
     """ 
     Initialise DatabaseConnector class instance.   
