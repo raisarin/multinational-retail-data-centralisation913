@@ -62,10 +62,12 @@ class DataCleaning:
     """
     df = df.drop_duplicates()
     df = df[~df.isin(['NULL']).any(axis=1)]
-    df = self.clean_country_code(df)
-    df = self.clean_date(df, 'date_of_birth')
-    df = self.clean_date(df, 'join_date')
-    df = self.clean_phone_number(df)
+    df = self._clean_country_code(df)
+    df = self._clean_date(df, 'date_of_birth')
+    df = self._clean_date(df, 'join_date')
+    df = self._clean_phone_number(df)
+    df = df.drop('index', axis=1)
+    df.set_index('first_name', inplace=True)
     return df
   
   def _clean_card_number(self, df): 
@@ -208,7 +210,7 @@ class DataCleaning:
       ' .':''
     }
     df.loc[:,'weight'] = df['weight'].replace(convertion_table, regex=True)
-    df['weight'] = df['weight'].apply(self.eval_weight)
+    df['weight'] = df['weight'].apply(self._eval_weight)
     df['weight'] = pd.to_numeric(df['weight'], errors='coerce')
     df.dropna(axis=0, inplace=True)
     return df 
@@ -254,11 +256,12 @@ class DataCleaning:
     Returns: 
       pd.dataframe: Clean product dataframe. 
     """   
-    df = self.convert_product_weights(df)
-    df = self.clean_date(df, 'date_added')
-    df = self.clean_category(df)
-    df = self.clean_removed(df)
+    df = self._convert_product_weights(df)
+    df = self._clean_date(df, 'date_added')
+    df = self._clean_category(df)
+    df = self._clean_removed(df)
     df = df.drop('Unnamed: 0', axis=1)
+    df.set_index('product_name', inplace=True)
     return df 
 
   def clean_orders_data(self, df):
@@ -296,5 +299,5 @@ class DataCleaning:
     Returns: 
       pd.dataframe: Clean date time dataframe.
     """
-    df = self.clean_time_period(df)
+    df = self._clean_time_period(df)
     return df 

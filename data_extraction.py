@@ -16,7 +16,7 @@ class DataExtractor:
   Attributes: 
     db_connector (DatabaseConnector object): DatabaseConnector object.
   """
-  
+
   def __init__(self, db_connector=None):
     """ 
     Initialise DataExtractor class instance. 
@@ -146,6 +146,7 @@ class DataExtractor:
       s3 = boto3.client('s3')
       s3.download_file(bucket, key, local_path)
       df = pd.read_csv(local_path)
+      print("INFO: Data extracted from S3 bucket")
       return df
     
     except NoCredentialsError:
@@ -173,6 +174,7 @@ class DataExtractor:
     response = requests.get(link)
     if response.status_code == 200: 
       df = pd.read_json(link)
+      print("INFO: Data extracted from link")
       return df
     else: 
       print(f'ERROR: Request failed when extracting from {link}')
