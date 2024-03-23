@@ -19,7 +19,7 @@ class DataExtractor:
     
   def read_rds_table(self, table_name): 
     try: 
-      with self.db_connector.engine.execution_options(isolation_level='AUTOCOMMIT').connect() as connection: 
+      with self.db_connector.engine.execution_options(isolation_level='AUTOCDEOMMIT').connect() as connection: 
         table_df = pd.read_sql_table(table_name, self.db_connector.engine)
         print(F"INFO: Dataframe read from table {table_name}")
         return table_df

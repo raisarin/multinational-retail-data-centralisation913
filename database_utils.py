@@ -1,16 +1,17 @@
-# %%
+# %%creds_yaml
 import yaml
 from sqlalchemy import create_engine, inspect
 
 class DatabaseConnector:
-  def __init__(self, creds_yaml = 'db_creds.yaml'):
-    self.creds_yaml = creds_yaml
+  def __init__(self, creds_file = 'db_creds.yaml'):
+    self.creds_file = creds_file
     self.creds_data = self.read_db_creds()
     self.engine = self.init_db_engine()
+    self.table_list = self.lsit_db_tables()
 
   def read_db_creds(self):
     try: 
-      with open(self.creds_yaml, 'r') as file:
+      with open(self.creds_file, 'r') as file:
         creds_data = yaml.safe_load(file) # Dealing with untrusted input file
         print("INFO: Credentials Read")
       return creds_data
@@ -44,21 +45,9 @@ class DatabaseConnector:
       print("Error: Engine inspection failed\n", e)
   
   def upload_to_db(self, table_df, table_name):
-    DATABASE_TYPE = 'postgresql'
-    DBAPI = 'psycopg2'
-    HOST = 'localhost'
-    USER = 'postgres'
-    PASSWORD = 'sql123'
-    DATABASE = 'sales_data'
-    PORT = 5432
-    try: 
-      engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
-      print("INFO: Database engine initilised to upload table to database")
-    except Exception as e: 
-      print("ERROR: Database engine initilisation failed when uploading table to database\n", e)
     try: 
       with engine.execution_options(isolation_level='AUTOCOMMIT').connect(): 
-        table_df.to_sql('dim_users', con=engine, if_exists='replace')
+        table_df.to_sql({table_name}, con=engine, if_exists='replace')
       print(f"INFO: {table_name} has been uploaded to database")
     except Exception as e: 
       print("ERROR: Database engine initilisation failed when uploading table to database\n", e)
