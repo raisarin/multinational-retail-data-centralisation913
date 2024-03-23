@@ -72,7 +72,7 @@ class DataCleaning:
   
   def _clean_card_number(self, df): 
     """
-    Clean card number column from card dataframe with numeric convertion and object casting for dataframe. 
+    Clean card number column from card dataframe by extracting the numbers only. 
 
     Parameters: 
       df (pd.dataframe): Card dataframe to be cleaned. 
@@ -81,14 +81,8 @@ class DataCleaning:
       pd.dataframe: Card dataframe with clean card number column. 
 
     Notes: 
-      Card Number range between 16 - 19 digits, caution has to be taken when downcasting.
-      int64   9,223,372,036,854,775,807
-      uint64 18,446,744,073,709,551,615
-      The type has been set to object as SQL does not support the use of uint64.
     """
-    df['card_number'] = pd.to_numeric(df['card_number'], errors='coerce', downcast='unsigned')
-    df.dropna(axis=0, inplace=True)
-    df['card_number'] = df['card_number'].astype('object')
+    df['card_number'] = df['card_number'].str.extract('(\\d+)')
     return df 
   
   def _clean_expiry_date(self, df): 
@@ -149,10 +143,11 @@ class DataCleaning:
     Returns: 
       pd.dataframe: Cleaned card dataframe. 
     """
-    df = self.clean_card_number(df)
-    df = self.clean_expiry_date(df)
-    df = self.clean_card_provider(df)
-    df = self.clean_date_payment(df)
+    df = self._clean_card_number(df)
+    df = self._clean_expiry_date(df)
+    df = self._clean_card_provider(df)
+    df = self._clean_date_payment(df)
+    df.set_index('card_number', inplace=True)
     return df
 
   def clean_store_data(self, df): 
@@ -300,4 +295,5 @@ class DataCleaning:
       pd.dataframe: Clean date time dataframe.
     """
     df = self._clean_time_period(df)
+    df.set_index('timestamp', inplace=True)
     return df 

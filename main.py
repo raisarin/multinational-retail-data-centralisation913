@@ -3,7 +3,6 @@ from data_extraction import DataExtractor
 from database_utils import DatabaseConnector
 from data_cleaning import DataCleaning
 
-# %% 
 if __name__ == "__main__":
 
   aws_db_connector = DatabaseConnector('db_creds.yaml')
