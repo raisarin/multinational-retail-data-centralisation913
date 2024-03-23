@@ -4,12 +4,14 @@ Creating database schema
 Querying the data 
 
 ## Table of Contents 
-1. [Installation instructions](#installation)
+1. [Installation instructions](#installation-instructions)
 2. [Usage instructions](#usage-instructions)
 3. [File structure](#file-structure)
 4. [License information](#license-information)
 
-## Installation
+
+## Installation instructions 
+
 ## Usage instructions
 1. Clone the repository
 ```
