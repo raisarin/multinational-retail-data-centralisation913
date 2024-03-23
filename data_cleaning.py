@@ -11,7 +11,7 @@ class DataCleaning:
   
   # phone number 
   def clean_date(self, df, column_name):
-    df.loc[:,column_name] = df[column_name].apply(lambda x: parse(str(x)) if not isinstance(x, pd.Timestamp) else x)
+    df.loc[:,column_name] = df[column_name].apply(parse)
     df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
     df.dropna(axis=0, inplace=True)
     df[column_name] = df[column_name].dt.strftime('%Y-%m-%d')
@@ -78,6 +78,7 @@ class DataCleaning:
     df = self.clean_date_payment(df)
     return df
 
+## clean store data 
   def clean_store_data(self, df): 
     df = df[df['country_code'].str.len() == 2]
     df.loc[:,'continent'] = df['continent'].replace({'eeEurope':'Europe', 'eeAmerica':'America'})
@@ -85,18 +86,48 @@ class DataCleaning:
     df = self.clean_date(df, 'opening_date')
     df = df.drop_duplicates()
     return df
-  
+
+## clean product data 
+  def eval_weight(self, weight): 
+    try: 
+      return eval(str(weight))
+    except: 
+      return weight
+    
   def convert_product_weights(self, df): 
-    df.dropna(axis=0, inplace=True)
-    df = self.clean_date(df, 'date_added')
     convertion_table = { 
+      'x':'*',
       'kg':'',
       'g':'/1000',
       'ml':'/1000',
       'oz':'/35.274',
-      'x':'*',
       ' .':''
     }
     df.loc[:,'weight'] = df['weight'].replace(convertion_table, regex=True)
+    df['weight'] = df['weight'].apply(self.eval_weight)
+    df['weight'] = pd.to_numeric(df['weight'], errors='coerce')
     df.dropna(axis=0, inplace=True)
-    test = pd.to_numeric(df['weight'], errors='coerce')
+    return df 
+  
+  def clean_category(self, df): 
+    category = ['toys-and-games', 'sports-and-leisure', 'pets', 'homeware',
+       'health-and-beauty', 'food-and-drink', 'diy']
+    df = df[df['category'].isin(category)]
+    df['category'] = df['category'].astype('string')
+    return df
+  
+  def clean_removed(self, df): 
+    removed = ['Still_avaliable', 'Removed']
+    df = df[df['removed'].isin(removed)]
+    df['removed'] = df['removed'].astype('string')
+    return df
+
+  def clean_products_data(self, df): 
+    df = self.convert_product_weights(df)
+    df = self.clean_date(df, 'date_added')
+    df = self.clean_category(df)
+    df = self.clean_removed(df)
+    df = df.drop('Unnamed: 0', axis=1)
+    return df 
+
+  

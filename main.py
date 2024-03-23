@@ -36,5 +36,7 @@ local_db_connector.upload_to_db(stores_date_clean, 'dim_store_details')
 product_link = 's3://data-handling-public/products.csv'
 local_path = 'products.csv'
 product_data = DataExtractor().extract_from_s3(product_link, local_path)
-product_data_clean = DataCleaning().convert_product_weights(product_data)
-#local_db_connector.upload_to_db(product_data_clean, 'dim_products')
+product_data_clean = DataCleaning().clean_products_data(product_data)
+local_db_connector.upload_to_db(product_data_clean, 'dim_products')
+
+# %%
