@@ -40,3 +40,8 @@ product_data_clean = DataCleaning().clean_products_data(product_data)
 local_db_connector.upload_to_db(product_data_clean, 'dim_products')
 
 # %%
+# Task 7: Retrieve and clean order table 
+orders_data = aws_db_extractor.read_rds_table('orders_table')
+orders_data_clean = DataCleaning().clean_orders_data(orders_data)
+local_db_connector.upload_to_db(orders_data_clean, 'orders_table')
+# %%

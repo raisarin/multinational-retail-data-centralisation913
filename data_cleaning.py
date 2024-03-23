@@ -9,7 +9,6 @@ class DataCleaning:
     df = df[df['country_code'].str.len() == 2]
     return df
   
-  # phone number 
   def clean_date(self, df, column_name):
     df.loc[:,column_name] = df[column_name].apply(parse)
     df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
@@ -130,4 +129,8 @@ class DataCleaning:
     df = df.drop('Unnamed: 0', axis=1)
     return df 
 
-  
+## clean order details 
+  def clean_orders_data(self, df):
+    df = df.drop(['level_0','first_name','last_name','1'], axis=1)
+    df.set_index('index')
+    return df

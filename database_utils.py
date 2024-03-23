@@ -46,7 +46,7 @@ class DatabaseConnector:
   
   def upload_to_db(self, table_df, table_name):
     try: 
-      done = table_df.to_sql(table_name, con=self.engine, if_exists='replace')  
+      table_df.to_sql(table_name, con=self.engine, if_exists='replace')  
       print(f"INFO: {table_name} has been uploaded to database")
     except Exception as e: 
       print("ERROR: Failed uploading table to database\n", e)
