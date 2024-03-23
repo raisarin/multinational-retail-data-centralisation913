@@ -48,10 +48,21 @@ python main.py
     │　├─foreign_key.sql
     │　├─orders_table.sql
     │　└─primary_key.sql
+    ├─query/
+    │　├─task1.sql
+    │　├─task2.sql
+    │　├─task3.sql
+    │　├─task4.sql
+    │　├─task5.sql
+    │　├─task6.sql
+    │　├─task7.sql
+    │　├─task8.sql
+    │　└─task9.sql
+    ├─utility/
+    │　├─data_cleaning.py
+    │　├─data_extraction.py
+    │　└─database_utils.py 
     ├─.gitignore
-    ├─data_cleaning.py
-    ├─data_extraction.py
-    ├─database_utils.py
     ├─main.py
     ├─mrdc_env.yaml
     └─README.md
