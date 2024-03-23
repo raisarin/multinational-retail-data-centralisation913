@@ -10,11 +10,11 @@ class DataCleaning:
     return df
   
   # phone number 
-  def clean_date(self, df, coloumn_name):
-    df.loc[:,coloumn_name] = df[coloumn_name].apply(parse)
-    df[coloumn_name] = pd.to_datetime(df[coloumn_name], errors='coerce')
+  def clean_date(self, df, column_name):
+    df.loc[:,column_name] = df[column_name].apply(lambda x: parse(str(x)) if not isinstance(x, pd.Timestamp) else x)
+    df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
     df.dropna(axis=0, inplace=True)
-    df[coloumn_name] = df[coloumn_name].dt.strftime('%Y-%m-%d')
+    df[column_name] = df[column_name].dt.strftime('%Y-%m-%d')
     return df
   
   def clean_phone_number(self, df):
@@ -47,7 +47,7 @@ class DataCleaning:
       # the type has been set to object as SQL does not support the use of uint64
       df['card_number'] = df['card_number'].astype('object')
     except Exception as e: 
-      print("ERROR: Failed to clean card number coloumn as unsigned integer\n", e)
+      print("ERROR: Failed to clean card number column as unsigned integer\n", e)
     return df 
   
   def clean_expiry_date(self, df): 
@@ -85,3 +85,18 @@ class DataCleaning:
     df = self.clean_date(df, 'opening_date')
     df = df.drop_duplicates()
     return df
+  
+  def convert_product_weights(self, df): 
+    df.dropna(axis=0, inplace=True)
+    df = self.clean_date(df, 'date_added')
+    convertion_table = { 
+      'kg':'',
+      'g':'/1000',
+      'ml':'/1000',
+      'oz':'/35.274',
+      'x':'*',
+      ' .':''
+    }
+    df.loc[:,'weight'] = df['weight'].replace(convertion_table, regex=True)
+    df.dropna(axis=0, inplace=True)
+    test = pd.to_numeric(df['weight'], errors='coerce')

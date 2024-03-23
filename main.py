@@ -30,4 +30,11 @@ stores_details_endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.co
 stores_data = DataExtractor().retrieve_stores_data(stores_details_endpoint, headers, number_of_stores)
 stores_date_clean = DataCleaning().clean_store_data(stores_data)
 local_db_connector.upload_to_db(stores_date_clean, 'dim_store_details')
+
 # %%
+# Task 6: Extract and clean product details 
+product_link = 's3://data-handling-public/products.csv'
+local_path = 'products.csv'
+product_data = DataExtractor().extract_from_s3(product_link, local_path)
+product_data_clean = DataCleaning().convert_product_weights(product_data)
+#local_db_connector.upload_to_db(product_data_clean, 'dim_products')

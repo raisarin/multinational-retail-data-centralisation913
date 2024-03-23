@@ -3,6 +3,8 @@ from sqlalchemy import text # fetch_data query
 import pandas as pd
 import tabula
 import requests
+import boto3 
+from botocore.exceptions import NoCredentialsError, ClientError
 
 class DataExtractor:
   def __init__(self, db_connector=None):
@@ -53,4 +55,21 @@ class DataExtractor:
         print(f"ERROR: Response Text: {response.text}")   
     store_data = pd.concat(store_data_list).set_index('index')
     return store_data   
+  
+  def extract_from_s3(self, link,local_path):
+    try: 
+      bucket, key = link.replace("s3://","").split("/")
+      s3 = boto3.client('s3')
+      s3.download_file(bucket, key, local_path)
+      df = pd.read_csv(local_path)
+      return df
+    
+    except NoCredentialsError:
+      print("ERROR: AWS credentials not found. Please configure your credentials.")
+
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'NoSuchBucket':
+            print(f"ERROR: {bucket} bucket does not exist.")
+        else:
+            print("ERROR: Failed extraction from s3\n", e)
 # %%
