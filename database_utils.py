@@ -13,7 +13,7 @@ class DatabaseConnector:
     try: 
       with open(self.creds_file, 'r') as file:
         creds_data = yaml.safe_load(file) # Dealing with untrusted input file
-        print("INFO: Credentials Read")
+        print(f"INFO: Credentials Read from {self.creds_file}")
       return creds_data
     except FileNotFoundError as e: 
       print("ERROR: File not found\n", e)
@@ -30,7 +30,7 @@ class DatabaseConnector:
     PORT = self.creds_data['RDS_PORT']
     try: 
       engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
-      print("INFO: Database engine initilised in DatabaseConnector")
+      print(f"INFO: Database engine initilised with {self.creds_file}")
       return engine
     except Exception as e: 
       print("ERROR: Database engine initilisation failed\n", e)
@@ -39,7 +39,7 @@ class DatabaseConnector:
     try: 
       inspector = inspect(self.engine)
       table_name = inspector.get_table_names()
-      print("Table in database: ", table_name)
+      print(f"Table in {self.creds_file} database:", table_name)
       return table_name
     except Exception as e: 
       print("Error: Table inspection failed\n", e)
