@@ -4,11 +4,11 @@ Creating database schema
 Querying the data 
 
 ## Table of Contents 
-2. [Installation instructions](#installation)
-3. [Usage instructions](#usage-instructions)
-4. [File structure](#file-structure)
-5. [License information](#license-information)
-6. 
+1. [Installation instructions](#installation)
+2. [Usage instructions](#usage-instructions)
+3. [File structure](#file-structure)
+4. [License information](#license-information)
+
 ## Installation
 ## Usage instructions
 ## File structure
