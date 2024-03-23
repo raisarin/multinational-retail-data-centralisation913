@@ -2,21 +2,12 @@
 from sqlalchemy import text # fetch_data query
 import pandas as pd
 import tabula
+import requests
 
 class DataExtractor:
   def __init__(self, db_connector=None):
     self.db_connector = db_connector
-  
-  # def fetch_data(self, table_name): 
-  #   try:
-  #     with self.db_connector.engine.execution_options(isolation_level='AUTOCOMMIT').connect() as connection: 
-  #       query = text(f"SELECT * FROM {table_name}")
-  #       result = connection.execute(query)
-  #       data = result.fetchall()
-  #       return data
-  #   except Exception as e: 
-  #     print("Error: Fetching data failed\n", e)
-    
+
   def read_rds_table(self, table_name): 
     try: 
       table_df = pd.read_sql_table(table_name, self.db_connector.engine)
@@ -35,4 +26,14 @@ class DataExtractor:
     except Exception as e: 
       print("ERROR: Unable to retrieve PDF data\n", e)
   
+  def list_number_of_stores(self, endpoint, header):
+    response = requests.get(endpoint, headers=header)
+    if response.status_code == 200: 
+      data = response.json()
+      return data['number_stores']
+    else: 
+      print(f"ERROR: Request failed with status code: {response.status_code}")
+      print(f"ERROR: Response Text: {response.text}")      
+  
+  def retrieve_stores_data(self, endpoint):
 # %%
