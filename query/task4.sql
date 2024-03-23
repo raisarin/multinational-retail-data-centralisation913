@@ -13,4 +13,4 @@ INNER JOIN
 GROUP BY 
 	location
 ORDER BY 
-	numbers_of_sales ASC
+	numbers_of_sales ASC;
