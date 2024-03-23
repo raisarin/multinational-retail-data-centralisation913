@@ -1,7 +1,4 @@
 # %%
-
-
-# %%
 #import database_utils as dbu
 from sqlalchemy import text
 import pandas as pd
@@ -23,14 +20,9 @@ class DataExtractor:
   def read_rds_table(self, table_name): 
     try: 
       with self.db_connector.engine.execution_options(isolation_level='AUTOCOMMIT').connect() as connection: 
-        rds_pd = pd.read_sql_table('table_name', self.db_connector.engine)
-        rds_pd.head(10)
+        rds_pd = pd.read_sql_table(table_name, self.db_connector.engine)
+        print(rds_pd.head(10))
         return rds_pd
     except Exception as e: 
       print("Error: Reading RDS table failed\n", e)
-# %%
-  check what is causing the error for the table to not load
-  test in the database_tulis directly 
-  if it runs there 
-  export to the data_extraction 
 # %%
