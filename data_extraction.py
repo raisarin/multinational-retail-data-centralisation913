@@ -1,6 +1,7 @@
 # %%
 from sqlalchemy import text # fetch_data query
 import pandas as pd
+import tabula
 
 class DataExtractor:
   def __init__(self, db_connector):
@@ -24,4 +25,12 @@ class DataExtractor:
         return table_df
     except Exception as e: 
       print("Error: Reading RDS table failed\n", e)
+
+  def retrieve_pdf_data(self, link = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf'):
+    try: 
+      pdf_df = tabula.read_pdf(link, stream=True, multiple_tables=False, pages='all')
+      print("Info: PDF converted to Datafram from link")
+    except Exception as e: 
+      print("ERROR: Unable to retrieve PDF data")
+    return pdf_df 
 # %%
