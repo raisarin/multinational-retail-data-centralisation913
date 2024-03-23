@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, inspect
 
 class DatabaseConnector:
   """ 
-  This class reads credentials from a yaml file to initilise a connection to a database in order to read or upload data.  
+  DatabaseConnector class reads credentials from a yaml file to initilise a connection to a database in order to read or upload data.  
   
   Parameters: 
     creds_file (str): Path to yaml file with database credentials 
@@ -16,11 +16,12 @@ class DatabaseConnector:
     table_name (list): List of table names in the database. 
 
   """
+  
   def __init__(self, creds_file):
     """ 
-    Initialise a instance of DatabaseConnector class.   
+    Initialise DatabaseConnector class instance.   
 
-    Attributes: 
+    Parameters: 
       creds_file (str): Path to the credentials.
     """
     self.creds_file = creds_file
@@ -81,7 +82,7 @@ class DatabaseConnector:
       list: Lists of table names.
 
     Raises: 
-      Exception: IF tables inspection fails.
+      Exception: If table inspection fails.
     """
     try: 
       inspector = inspect(self.engine)

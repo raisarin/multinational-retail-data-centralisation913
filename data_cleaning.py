@@ -2,14 +2,34 @@ import pandas as pd
 from dateutil.parser import parse
 
 class DataCleaning: 
+  """
+  DataCleaning class is called for cleaning the dataframe with appropriate functions.
+  """
 
-  ## for clean user data 
   def _clean_country_code(self, df):
+    """
+    Clean the country code column in the dataframe by replacing certain country code and limiting it to two characters.
+
+    Parameters: 
+      df (pd.dataframe): User dataframe to be cleaned. 
+
+    Returns: 
+      pd.dataframe: User dataframe with cleaned country code column.
+    """
     df.loc[:,'country_code'] = df['country_code'].replace('GGB','GB')
     df = df[df['country_code'].str.len() == 2]
     return df
   
   def _clean_date(self, df, column_name):
+    """
+    Clean the date column from date dataframe with date formatting. 
+
+    Parameters: 
+      df (pd.dataframe): User dataframe to be cleaned.
+
+    Returns: 
+      pd.dataframe: User dataframe with cleaned date column.
+    """
     df.loc[:,column_name] = df[column_name].apply(parse)
     df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
     df.dropna(axis=0, inplace=True)
@@ -17,11 +37,29 @@ class DataCleaning:
     return df
   
   def _clean_phone_number(self, df):
+    """
+    Clean the phone number column in the dataframe with certain phone number format. 
+
+    Parameters: 
+      df (pd.dataframe): User dataframe to be cleaned.
+
+    Returns: 
+      pd.dataframe: User dataframe with cleaned phone number column.
+    """
     df['phone_number'] = df['phone_number'].replace({r'\+49':'0', r'\+44':'0', r'\(0\)':''}, regex=True)
     df['phone_number'] = df['phone_number'].replace({r'\D': ''}, regex=True)
     return df
     
   def clean_user_data(self, df):
+    """
+    Clean the user dataframe using different cleaning functions. 
+
+    Parameters: 
+      df (pd.dataframe): User dataframe to be cleaned.
+
+    Returns: 
+      pd.dataframe: Cleaned user dataframe. 
+    """
     df = df.drop_duplicates()
     df = df[~df.isin(['NULL']).any(axis=1)]
     df = self.clean_country_code(df)
@@ -30,32 +68,52 @@ class DataCleaning:
     df = self.clean_phone_number(df)
     return df
   
-  ## For cleaning card data
   def _clean_card_number(self, df): 
-    # 15587 = 55 + 56*277 + 20 <- (19 data + 1 heading)
-    ## card_number errors
+    """
+    Clean card number column from card dataframe with numeric convertion and object casting for dataframe. 
 
-    # Card Number range between 16 - 19 digits
-    # int64   9,223,372,036,854,775,807
-    # uint64 18,446,744,073,709,551,615
-    # int64 does not cover all 19 digit variations 
+    Parameters: 
+      df (pd.dataframe): Card dataframe to be cleaned. 
 
+    Returns: 
+      pd.dataframe: Card dataframe with clean card number column. 
+
+    Notes: 
+      Card Number range between 16 - 19 digits, caution has to be taken when downcasting.
+      int64   9,223,372,036,854,775,807
+      uint64 18,446,744,073,709,551,615
+      The type has been set to object as SQL does not support the use of uint64.
+    """
     df['card_number'] = pd.to_numeric(df['card_number'], errors='coerce', downcast='unsigned')
     df.dropna(axis=0, inplace=True)
-    try: 
-      # the type has been set to object as SQL does not support the use of uint64
-      df['card_number'] = df['card_number'].astype('object')
-    except Exception as e: 
-      print("ERROR: Failed to clean card number column as unsigned integer\n", e)
+    df['card_number'] = df['card_number'].astype('object')
     return df 
   
   def _clean_expiry_date(self, df): 
+    """
+    Clean expiry date column from card dataframe with month-day format.
+
+    Parameters
+      df (pd.dataframe): Card dataframe to be cleaned. 
+    
+    Returns: 
+      pd.dataframe: Card dataframe with clean expiry date column. 
+    """
     df['expiry_date'] = pd.to_datetime(df['expiry_date'], format='%m/%d', errors='coerce', exact=True)
     df.dropna(axis=0, inplace=True)
     df['expiry_date'] = df['expiry_date'].dt.strftime('%m/%d') 
     return df
   
   def _clean_card_provider(self, df):
+    """
+    Clean card provider column from card dataframe by filtering from a list.
+
+    Parameters
+      df (pd.dataframe): Card dataframe to be cleaned. 
+    
+    Returns: 
+      pd.dataframe: Card dataframe with clean card provider column. 
+    """
     card_provider_list = ['Diners Club / Carte Blanche', 'American Express', 
                           'JCB 16 digit', 'JCB 15 digit', 
                           'Maestro', 'Mastercard', 
@@ -66,19 +124,46 @@ class DataCleaning:
     return df
   
   def _clean_date_payment(self,df):
+    """
+    Clean date payment column from card dataframe with year-month-day format.
+
+    Parameters
+      df (pd.dataframe): Card dataframe to be cleaned. 
+    
+    Returns: 
+      pd.dataframe: Card dataframe with clean date payment column. 
+    """
     df['date_payment_confirmed'] = pd.to_datetime(df['date_payment_confirmed'], format='%Y-%m-%d', errors='coerce', exact=True)
     df.dropna(axis=0, inplace=True)
     return df
 
   def clean_card_data(self, df):
+    """
+    Clean card dataframe using various functions. 
+
+    Parameters
+      df (pd.dataframe): Card dataframe to be cleaned. 
+    
+    Returns: 
+      pd.dataframe: Cleaned card dataframe. 
+    """
     df = self.clean_card_number(df)
     df = self.clean_expiry_date(df)
     df = self.clean_card_provider(df)
     df = self.clean_date_payment(df)
     return df
 
-## clean store data 
   def clean_store_data(self, df): 
+    """
+    Clean different column in the store dataframe by limiting country code column to 2 characters, 
+    renaming values in continent column, dropping unused column and cleaning opening date column. 
+
+    Parameters
+      df (pd.dataframe): Store dataframe to be cleaned. 
+    
+    Returns: 
+      pd.dataframe: Cleaned store dataframe. 
+    """
     df = df[df['country_code'].str.len() == 2]
     df.loc[:,'continent'] = df['continent'].replace({'eeEurope':'Europe', 'eeAmerica':'America'})
     df = df.drop('lat', axis=1)
@@ -86,14 +171,32 @@ class DataCleaning:
     df = df.drop_duplicates()
     return df
 
-## clean product data 
   def _eval_weight(self, weight): 
+    """
+    Perform evluation function on the weight input.  
+
+    Parameters
+      weight (str): Value in the weight column of product dataframe. 
+    
+    Returns: 
+      int: If evluation function can be performed. 
+      str: If evluation cannot be performed.
+    """
     try: 
       return eval(str(weight))
     except: 
       return weight
     
   def _convert_product_weights(self, df): 
+    """ 
+    Convert the weight column of the product dataframe using the convertion dictionary. 
+
+    Paramters: 
+      df (pd.dataframe): Product dataframe to be cleaned. 
+
+    Returns: 
+      pd.dataframe: Product dataframe with cleaned weight column. 
+    """
     convertion_table = { 
       'x':'*',
       'kg':'',
@@ -109,6 +212,15 @@ class DataCleaning:
     return df 
   
   def _clean_category(self, df): 
+    """ 
+    Clean category column of the product dataframe using the category list. 
+
+    Paramters: 
+      df (pd.dataframe): Product dataframe to be cleaned. 
+
+    Returns: 
+      pd.dataframe: Product dataframe with cleaned category column. 
+    """  
     category = ['toys-and-games', 'sports-and-leisure', 'pets', 'homeware',
        'health-and-beauty', 'food-and-drink', 'diy']
     df = df[df['category'].isin(category)]
@@ -116,12 +228,30 @@ class DataCleaning:
     return df
   
   def _clean_removed(self, df): 
+    """ 
+    Clean removed column of the product dataframe using the removed list. 
+
+    Paramters: 
+      df (pd.dataframe): Product dataframe to be cleaned. 
+
+    Returns: 
+      pd.dataframe: Product dataframe with cleaned removed column. 
+    """      
     removed = ['Still_avaliable', 'Removed']
     df = df[df['removed'].isin(removed)]
     df['removed'] = df['removed'].astype('string')
     return df
 
-  def _clean_products_data(self, df): 
+  def clean_products_data(self, df): 
+    """ 
+    Clean product dataframe with different fucntions. 
+
+    Paramters: 
+      df (pd.dataframe): Product dataframe to be cleaned. 
+
+    Returns: 
+      pd.dataframe: Clean product dataframe. 
+    """   
     df = self.convert_product_weights(df)
     df = self.clean_date(df, 'date_added')
     df = self.clean_category(df)
@@ -129,18 +259,40 @@ class DataCleaning:
     df = df.drop('Unnamed: 0', axis=1)
     return df 
 
-## clean order details 
   def clean_orders_data(self, df):
+    """
+    Clean orders datafame by removing unnecessary columns.
+
+    Returns: 
+      pd.dataframe: Clean orders dataframe.
+    """
     df = df.drop(['level_0','first_name','last_name','1'], axis=1)
     df.set_index('index')
     return df
 
-## clean date time data 
   def _clean_time_period(self, df): 
+    """
+    Clean time period column in date time dataframe by filtering values using time period list. 
+
+    Parameters: 
+      df (pd.dataframe): Date time dataframe to be cleaned. 
+    
+    Returns: 
+      pd.dataframe: Date time dataframe with clean time period column.
+    """
     time_period_list = ['Evening', 'Morning', 'Midday', 'Late_Hours']
     df = df[df['time_period'].isin(time_period_list)]
     return df
 
   def clean_date_time_data(self, df): 
+    """
+    Clean date time dataframe using a function. 
+
+    Parameters: 
+      df (pd.dataframe): Date time dataframe to be cleaned. 
+    
+    Returns: 
+      pd.dataframe: Clean date time dataframe.
+    """
     df = self.clean_time_period(df)
     return df 
