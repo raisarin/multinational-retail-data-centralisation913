@@ -11,5 +11,19 @@ Querying the data
 
 ## Installation
 ## Usage instructions
+1. Clone the repository
+```
+git clone https://github.com/raisarin/multinational-retail-data-centralisation913.git
+```
+2. 
 ## File structure
+    .
+    ├─.git/
+    ├─.gitignore
+    ├─data_cleaning.py
+    ├─data_extraction.py
+    ├─database_utils.py
+    ├─main.py
+    └─README.md
+
 ## License information
