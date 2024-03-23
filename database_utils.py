@@ -2,7 +2,6 @@
 import yaml
 from sqlalchemy import create_engine
 
-# %%
 class DatabaseConnector:
   creds_yaml = 'db_creds.yaml'
 
@@ -30,8 +29,9 @@ class DatabaseConnector:
     try: 
       engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
       engine.execution_options(isolation_level='AUTOCOMMIT').connect()
+      print("Database engine initilised in DatabaseConnector")
       return engine
     except Exception as e: 
       print("ERROR: Database engine initilisation failed")
 
-#%%
+# %%
