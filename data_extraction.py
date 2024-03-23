@@ -29,7 +29,6 @@ class DataExtractor:
       print("ERROR: Unable to retrieve PDF data\n", e)
   
   def list_number_of_stores(self, endpoint, headers):
-    
     response = requests.get(endpoint, headers=headers)
     if response.status_code == 200: 
       data = response.json()
@@ -56,7 +55,7 @@ class DataExtractor:
     store_data = pd.concat(store_data_list).set_index('index')
     return store_data   
   
-  def extract_from_s3(self, link,local_path):
+  def extract_from_s3(self, link, local_path):
     try: 
       bucket, key = link.replace("s3://","").split("/")
       s3 = boto3.client('s3')
@@ -72,4 +71,14 @@ class DataExtractor:
             print(f"ERROR: {bucket} bucket does not exist.")
         else:
             print("ERROR: Failed extraction from s3\n", e)
+
+  def extract_from_https(self, link):
+    response = requests.get(link)
+    if response.status_code == 200: 
+      df = pd.read_json(link)
+      return df
+    else: 
+      print(f'ERROR: Request failed when extracting from {link}')
+      print(f"ERROR: Request failed with status code: {response.status_code}")
+      print(f"ERROR: Response Text: {response.text}") 
 # %%

@@ -134,3 +134,13 @@ class DataCleaning:
     df = df.drop(['level_0','first_name','last_name','1'], axis=1)
     df.set_index('index')
     return df
+
+## clean date time data 
+  def clean_time_period(self, df): 
+    time_period_list = ['Evening', 'Morning', 'Midday', 'Late_Hours']
+    df = df[df['time_period'].isin(time_period_list)]
+    return df
+
+  def clean_date_time_data(self, df): 
+    df = self.clean_time_period(df)
+    return df 

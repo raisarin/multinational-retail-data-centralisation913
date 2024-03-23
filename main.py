@@ -34,8 +34,8 @@ local_db_connector.upload_to_db(stores_date_clean, 'dim_store_details')
 # %%
 # Task 6: Extract and clean product details 
 product_link = 's3://data-handling-public/products.csv'
-local_path = 'products.csv'
-product_data = DataExtractor().extract_from_s3(product_link, local_path)
+product_local_path = 'products.csv'
+product_data = DataExtractor().extract_from_s3(product_link, product_local_path)
 product_data_clean = DataCleaning().clean_products_data(product_data)
 local_db_connector.upload_to_db(product_data_clean, 'dim_products')
 
@@ -44,4 +44,11 @@ local_db_connector.upload_to_db(product_data_clean, 'dim_products')
 orders_data = aws_db_extractor.read_rds_table('orders_table')
 orders_data_clean = DataCleaning().clean_orders_data(orders_data)
 local_db_connector.upload_to_db(orders_data_clean, 'orders_table')
+
+# %%
+# Task 8: Retrieve and clean date event data 
+date_time_link = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'
+date_time_data = DataExtractor().extract_from_https(date_time_link)
+date_time_data_clean = DataCleaning().clean_date_time_data(date_time_data)
+local_db_connector.upload_to_db(date_time_data_clean, 'dim_date_times')
 # %%
