@@ -1,2 +1,4 @@
 class DataCleaning: 
-  def 
+  
+  def clean_user_data(self, rds_pd):
+    return
