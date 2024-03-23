@@ -64,8 +64,7 @@ class DataExtractor:
     """
     try: 
       pdf_list = tabula.read_pdf(pdf_link, stream=True, multiple_tables=False, pages='all', lattice=True)
-     #pdf_df = pdf_list[0]
-      pdf_df = pd.concat(pdf_list)
+      pdf_df = pdf_list[0]
       print("Info: PDF converted to Dataframe from link")
       return pdf_df
     except Exception as e: 

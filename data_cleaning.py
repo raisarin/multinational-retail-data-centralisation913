@@ -22,7 +22,7 @@ class DataCleaning:
   
   def _clean_date(self, df, column_name):
     """
-    Clean the date column from date dataframe with date formatting. 
+    Clean the date column from date dataframe with date formatting by cleaning non dates and keeping yyyy-mm-dd format. 
 
     Parameters: 
       df (pd.dataframe): User dataframe to be cleaned.
@@ -72,7 +72,7 @@ class DataCleaning:
   
   def _clean_card_number(self, df): 
     """
-    Clean card number column from card dataframe by extracting the numbers only. 
+    Clean card number column from card dataframe by clearing "?" from input and removing non numeric entires. 
 
     Parameters: 
       df (pd.dataframe): Card dataframe to be cleaned. 
@@ -82,22 +82,25 @@ class DataCleaning:
 
     Notes: 
     """
-    df['card_number'] = df['card_number'].str.extract('(\\d+)')
+    df['card_number'] = df['card_number'].replace({r'\?':''}, regex=True)
+    df = df[pd.to_numeric(df['card_number'], errors='coerce').notnull()]
     return df 
   
   def _clean_expiry_date(self, df): 
     """
-    Clean expiry date column from card dataframe with month-day format.
+    Clean expiry date column from card dataframe with year-month-day format and adding 2024 to account for leap year then format it to month-day.
 
     Parameters
       df (pd.dataframe): Card dataframe to be cleaned. 
     
     Returns: 
       pd.dataframe: Card dataframe with clean expiry date column. 
+
+    Notes: 
+      df.loc[:,'expiry_date'] = pd.to_datetime('2024/' + df['expiry_date'], format='%Y/%m/%d', errors='coerce') has been tested, but it would not convert the column to datetime format. 
     """
-    df['expiry_date'] = pd.to_datetime(df['expiry_date'], format='%m/%d', errors='coerce', exact=True)
-    df.dropna(axis=0, inplace=True)
-    df['expiry_date'] = df['expiry_date'].dt.strftime('%m/%d') 
+    df['expiry_date'] = pd.to_datetime(df['expiry_date'], format='%m/%d', errors='coerce')
+    df.loc[:,'expiry_date'] = df['expiry_date'].dt.strftime('%m/%d') 
     return df
   
   def _clean_card_provider(self, df):
@@ -130,7 +133,6 @@ class DataCleaning:
       pd.dataframe: Card dataframe with clean date payment column. 
     """
     df['date_payment_confirmed'] = pd.to_datetime(df['date_payment_confirmed'], format='%Y-%m-%d', errors='coerce', exact=True)
-    df.dropna(axis=0, inplace=True)
     return df
 
   def clean_card_data(self, df):
