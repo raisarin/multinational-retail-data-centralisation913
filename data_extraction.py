@@ -25,12 +25,15 @@ class DataExtractor:
         return table_df
     except Exception as e: 
       print("Error: Reading RDS table failed\n", e)
-
+  
+  # use "lattice=true" for more accurate table extraction and to avoid combining datas to single cell
   def retrieve_pdf_data(self, link = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf'):
     try: 
-      pdf_df = tabula.read_pdf(link, stream=True, multiple_tables=False, pages='all')
+      pdf_list = tabula.read_pdf(link, stream=True, multiple_tables=False, pages='all', lattice=True)
+      pdf_df = pdf_list[0]
       print("Info: PDF converted to Datafram from link")
+      return pdf_df
     except Exception as e: 
-      print("ERROR: Unable to retrieve PDF data")
-    return pdf_df 
+      print("ERROR: Unable to retrieve PDF data\n", e)
+     
 # %%
