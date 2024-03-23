@@ -39,21 +39,21 @@ python main.py
 ```
 ## File structure
     .
-├─database_schema/
-│　├─dim_card_details.sql
-│　├─dim_date_times.sql
-│　├─dim_products.sql
-│　├─dim_store_details.sql
-│　├─dim_users.sql
-│　├─foreign_key.sql
-│　├─orders_table.sql
-│　└─primary_key.sql
-├─.gitignore
-├─data_cleaning.py
-├─data_extraction.py
-├─database_utils.py
-├─main.py
-├─mrdc_env.yaml
-└─README.md
+    ├─database_schema/
+    │　├─dim_card_details.sql
+    │　├─dim_date_times.sql
+    │　├─dim_products.sql
+    │　├─dim_store_details.sql
+    │　├─dim_users.sql
+    │　├─foreign_key.sql
+    │　├─orders_table.sql
+    │　└─primary_key.sql
+    ├─.gitignore
+    ├─data_cleaning.py
+    ├─data_extraction.py
+    ├─database_utils.py
+    ├─main.py
+    ├─mrdc_env.yaml
+    └─README.md
 
 ## License information

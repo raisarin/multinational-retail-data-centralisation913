@@ -1,7 +1,7 @@
 #%%
-from data_extraction import DataExtractor
-from database_utils import DatabaseConnector
-from data_cleaning import DataCleaning
+from utility.data_extraction import DataExtractor
+from utility.database_utils import DatabaseConnector
+from utility.data_cleaning import DataCleaning
 
 if __name__ == "__main__":
 
