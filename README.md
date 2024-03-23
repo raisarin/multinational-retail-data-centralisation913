@@ -1,9 +1,5 @@
 # Multinational Retail Data Centralisation 
-Extracting and cleaning data from the data source 
-
-Creating database schema 
-
-Querying the data 
+Extracting and cleaning data from online resources such as AWS buckets, online link and local database. Creating database schema to relation between different tables within the database ensuring robustness and integrity of the data. Querying the data using SQL to organise and present the dataset in order to be easily understood by the users.
 
 ## Table of Contents 
 1. [Installation instructions](#installation-instructions)
@@ -24,6 +20,7 @@ There are a few applications that are required for the project.
 
 3. Miniconda 
 * [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/ "https://docs.conda.io/projects/miniconda/en/latest/") helps set up virtual environments to install necessary packages to run the project. 
+
 ## Usage instructions
 1. Clone the repository
 ```
@@ -67,4 +64,25 @@ python main.py
     ├─mrdc_env.yaml
     └─README.md
 
+* database_schema: Configure and connect the star-based schema of the database in milestone 3.
+
+* query: SQL query results to show the results needed for milestone 4.
+
+* utility: Extracting and cleaning data from data sources for milestone 2.
+
+* main.py: Initialise the project. 
+
+* mrdc_env.yaml: Miniconda environment setup configurations.
+
 ## License information
+The MIT License (MIT)
+
+Copyright (c) .NET Foundation and Contributors
+
+All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
