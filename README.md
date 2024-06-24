@@ -1,5 +1,5 @@
 # Multinational Retail Data Centralisation 
-Extracting and cleaning data from online resources such as AWS buckets, online link and local database. Creating database schema to relation between different tables within the database ensuring robustness and integrity of the data. Querying the data using SQL to organise and present the dataset in order to be easily understood by the users.
+Extracting and cleaning data from online resources such as AWS buckets, online links and local databases. Creating a database schema to relate different tables within the database ensures the robustness and integrity of the data. Querying the data using SQL to organise and present the dataset in order to be easily understood by the users.
 
 ## Table of Contents 
 1. [Installation instructions](#installation-instructions)
@@ -9,14 +9,14 @@ Extracting and cleaning data from online resources such as AWS buckets, online l
 
 
 ## Installation instructions 
-There are a few applications that are required for the project. 
+A few applications are required for the project. 
 
 1. PostgreSQL and pgAdmin
 * [PostgreSQL](https://www.postgresql.org/download/ "https://www.postgresql.org/download/") and 
 [pgAdmin](https://www.pgadmin.org/download/ "https://www.pgadmin.org/download/") will be used to manipulate the dataset stored locally or from online. 
 
 2. AWS Command Line Interface
-* [AWD CLI](https://aws.amazon.com/cli/ "https://aws.amazon.com/cli/") is used to communicate with the Amazon services.
+* [AWS CLI](https://aws.amazon.com/cli/ "https://aws.amazon.com/cli/") is used to communicate with the Amazon services.
 
 3. Miniconda 
 * [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/ "https://docs.conda.io/projects/miniconda/en/latest/") helps set up virtual environments to install necessary packages to run the project. 
